@@ -675,13 +675,12 @@
     <div class="modal-sub" data-ko="방사선종양학과 전문의 · 의사과학자<br>동남권원자력의학원 (DIRAMS) · 부산">Radiation Oncologist &amp; Clinician-Scientist<br>DIRAMS <span class="kr">(동남권원자력의학원)</span> · Busan, Korea</div>
     <ul class="contact-list">
       <li><span class="c-label" data-ko="이메일">Email</span><a href="mailto:tosolyu@dirams.re.kr">tosolyu@dirams.re.kr</a></li>
-      <li><span class="c-label" data-ko="휴대전화">Mobile</span><a href="tel:+821027700174">010-2770-0174</a></li>
-      <li><span class="c-label" data-ko="사무실">Office</span><a href="tel:+82517205052">051-720-5052</a></li>
+      <li><span class="c-label" data-ko="전화">Tel</span><a href="tel:+82517205052">051-720-5052</a></li>
       <li><span class="c-label">KakaoTalk</span><a href="#" id="kakaoLink" class="c-action">tosolyu <span class="hint" data-ko="복사 후 열기">copy &amp; open</span></a></li>
       <li><span class="c-label">Instagram</span><a href="https://instagram.com/tosolyu" id="instaLink" target="_blank" rel="noopener">@tosolyu</a></li>
     </ul>
     <div id="toast" class="toast"></div>
-    <button type="button" class="save-contact" id="saveContactBtn" data-ko="📇 연락처에 저장">📇 Save to contacts</button>
+    <a href="contact-en.vcf" id="saveContactBtn" class="save-contact" download data-ko="📇 연락처에 저장">📇 Save to contacts</a>
     <a href="#work" class="modal-site-link" data-ko="연구 소개 보기 ↓">Explore the research ↓</a>
   </div>
 </div>
@@ -713,6 +712,7 @@
       history.replaceState(null, '', u);
     }catch(err){}
     if(typeof syncMoreBtns === 'function') syncMoreBtns(lang);
+    if(typeof syncVCardLink === 'function') syncVCardLink(lang);
   }
 
   document.querySelectorAll('[data-setlang]').forEach(function(btn){
@@ -796,50 +796,13 @@
     window.location.href = 'instagram://user?username=tosolyu';
   });
 
-  // ---- save contact (vCard), language-aware ----
-  function buildVCard(ko){
-    return [
-      'BEGIN:VCARD',
-      'VERSION:3.0',
-      ko ? 'N:유;도솔;;;' : 'N:Yu;Tosol;;;M.D., Ph.D.',
-      ko ? 'FN:유도솔' : 'FN:Tosol Yu',
-      ko ? 'ORG:동남권원자력의학원;방사선종양학과'
-         : 'ORG:DIRAMS (Dongnam Inst. of Radiological & Medical Sciences);Radiation Oncology',
-      ko ? 'TITLE:방사선종양학과 전문의' : 'TITLE:Radiation Oncologist, M.D., Ph.D.',
-      'TEL;TYPE=CELL,VOICE:+82-10-2770-0174',
-      'TEL;TYPE=WORK,VOICE:+82-51-720-5052',
-      'EMAIL;TYPE=WORK:tosolyu@dirams.re.kr',
-      'URL:https://tosolyu.github.io/',
-      'X-SOCIALPROFILE;TYPE=instagram:https://instagram.com/tosolyu',
-      ko ? 'NOTE:카카오톡 ID: tosolyu' : 'NOTE:KakaoTalk ID: tosolyu',
-      'END:VCARD'
-    ].join('\r\n');
-  }
-
+  // ---- save contact: point the link at the right .vcf for the language ----
   var saveBtn = document.getElementById('saveContactBtn');
-  saveBtn.addEventListener('click', function(){
-    var ko = document.body.classList.contains('lang-ko');
-    var vcard = buildVCard(ko);
-    try{
-      var blob = new Blob(['\ufeff' + vcard], {type:'text/vcard;charset=utf-8'});
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = (ko ? '유도솔' : 'TosolYu') + '.vcf';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
-    }catch(err){
-      window.location.href = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(vcard);
-    }
-    saveBtn.classList.add('done');
-    saveBtn.textContent = ko ? '✓ 연락처 파일이 열렸습니다' : '✓ Contact card opened';
-    setTimeout(function(){
-      saveBtn.classList.remove('done');
-      saveBtn.innerHTML = saveBtn.getAttribute(ko ? 'data-ko' : 'data-en');
-    }, 3000);
-  });
+  function syncVCardLink(lang){
+    if(!saveBtn) return;
+    saveBtn.setAttribute('href', lang === 'ko' ? 'contact-ko.vcf' : 'contact-en.vcf');
+    saveBtn.setAttribute('download', (lang === 'ko' ? '유도솔' : 'TosolYu') + '.vcf');
+  }
 
   // ---- collapsible show-more ----
   function syncMoreBtns(lang){
