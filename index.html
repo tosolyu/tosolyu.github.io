@@ -680,7 +680,7 @@
       <li><span class="c-label">Instagram</span><a href="https://instagram.com/tosolyu" id="instaLink" target="_blank" rel="noopener">@tosolyu</a></li>
     </ul>
     <div id="toast" class="toast"></div>
-    <a href="contact-en.vcf" id="saveContactBtn" class="save-contact" download data-ko="📇 연락처에 저장">📇 Save to contacts</a>
+    <a href="contact-en.vcf" id="saveContactBtn" class="save-contact" data-ko="📇 연락처에 저장">📇 Save to contacts</a>
     <a href="#work" class="modal-site-link" data-ko="연구 소개 보기 ↓">Explore the research ↓</a>
   </div>
 </div>
@@ -797,11 +797,19 @@
   });
 
   // ---- save contact: point the link at the right .vcf for the language ----
+  // NOTE: on iOS/Android the `download` attribute makes the OS file-save the .vcf
+  // instead of handing it to Contacts, so we only set it on desktop.
   var saveBtn = document.getElementById('saveContactBtn');
+  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   function syncVCardLink(lang){
     if(!saveBtn) return;
     saveBtn.setAttribute('href', lang === 'ko' ? 'contact-ko.vcf' : 'contact-en.vcf');
-    saveBtn.setAttribute('download', (lang === 'ko' ? '유도솔' : 'TosolYu') + '.vcf');
+    if(isMobile){
+      saveBtn.removeAttribute('download');
+      saveBtn.removeAttribute('target');
+    } else {
+      saveBtn.setAttribute('download', (lang === 'ko' ? '유도솔' : 'TosolYu') + '.vcf');
+    }
   }
 
   // ---- collapsible show-more ----
