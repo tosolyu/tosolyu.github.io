@@ -109,6 +109,24 @@
   .mobile-nav-panel .panel-lang button.active{background:var(--cherenkov);color:#fff;border-color:var(--cherenkov)}
 
   .hero{min-height:100vh;display:flex;align-items:center;padding-top:62px;overflow:hidden}
+  /* surf drone still, kept faint so the type stays the subject */
+  .hero-bg{
+    position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:url('surf.jpg') center 32%/cover no-repeat;
+    opacity:.26;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 88%);
+            mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 88%);
+  }
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(100deg,var(--ink) 0%,rgba(255,255,255,.88) 42%,rgba(255,255,255,.55) 72%,rgba(255,255,255,.3) 100%);
+  }
+  @media(max-width:760px){
+    .hero-bg{opacity:.2}
+    .hero-bg::after{background:linear-gradient(180deg,rgba(255,255,255,.82) 0%,rgba(255,255,255,.9) 55%,var(--ink) 100%)}
+    .hero{padding-bottom:40px}
+    .scroll-cue{display:none}
+  }
   .hero .glow{
     position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);
     width:920px;height:920px;max-width:140vw;max-height:140vw;
@@ -198,7 +216,16 @@
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
   .reveal.in{opacity:1;transform:none}
 
-  .work-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:40px}
+  .work-photo{margin-top:34px;border-radius:18px;overflow:hidden;position:relative;border:1px solid var(--line)}
+  .work-photo img{width:100%;display:block;aspect-ratio:16/9.6;object-fit:cover;object-position:center 58%}
+  .work-photo figcaption{
+    position:absolute;left:0;right:0;bottom:0;padding:34px 22px 15px;
+    font-size:12px;color:#fff;letter-spacing:.01em;
+    background:linear-gradient(transparent,rgba(8,16,28,.72));
+  }
+  .work-photo figcaption .kr{color:rgba(255,255,255,.72)}
+  @media(max-width:680px){.work-photo img{aspect-ratio:16/11}}
+  .work-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:18px}
   .work-cell{background:var(--ink);padding:34px 32px;transition:background .3s}
   .work-cell:hover{background:var(--ink-2)}
   .work-cell .num{font-family:'Space Mono',monospace;font-size:12px;color:var(--cherenkov);letter-spacing:.1em}
@@ -284,55 +311,95 @@
   }
   .modal-overlay.open{opacity:1;pointer-events:auto}
   .modal-card{
-    position:relative;width:100%;max-width:380px;background:var(--ink);
-    border:1px solid var(--line-strong);border-radius:20px;padding:36px 30px 30px;
-    box-shadow:0 30px 80px rgba(12,22,38,.25);
+    position:relative;width:100%;max-width:372px;background:var(--ink);
+    border:1px solid var(--line-strong);border-radius:22px;padding:0 0 26px;
+    box-shadow:0 30px 80px rgba(12,22,38,.25);overflow:hidden;
     transform:translateY(14px) scale(.97);transition:transform .25s ease;
+    max-height:90vh;overflow-y:auto;
   }
   .modal-overlay.open .modal-card{transform:translateY(0) scale(1)}
   .modal-close{
-    position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;
-    border:1px solid var(--line-strong);background:transparent;color:var(--muted);
+    position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;z-index:3;
+    border:none;background:rgba(255,255,255,.75);backdrop-filter:blur(6px);color:var(--paper);
     font-size:13px;cursor:pointer;transition:.2s;
   }
-  .modal-close:hover{color:var(--cherenkov);border-color:var(--cherenkov)}
-  .modal-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--cherenkov)}
-  body.lang-ko .modal-eyebrow{font-family:'Noto Sans KR',monospace;letter-spacing:.06em;text-transform:none;font-size:12px}
-  .modal-name{font-family:'Fraunces',serif;font-size:24px;margin-top:10px;margin-bottom:6px}
-  body.lang-ko .modal-name{font-family:'Noto Sans KR',serif;font-weight:700}
-  .modal-name .kr{font-size:.62em;color:var(--muted);margin-left:.5em}
-  .modal-sub{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.55}
-  .contact-list{list-style:none}
-  .contact-list li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
-  .contact-list li:first-child{border-top:none}
-  .c-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2)}
-  body.lang-ko .c-label{font-family:'Noto Sans KR',monospace;text-transform:none;font-size:12px}
-  .contact-list a, .contact-list .c-val{font-size:15px;color:var(--paper)}
-  .contact-list a:hover{color:var(--cherenkov)}
-  .c-action .hint{
-    display:inline-block;margin-left:7px;font-size:10.5px;letter-spacing:.06em;
-    text-transform:uppercase;color:var(--cherenkov);
-    border:1px solid var(--line-strong);border-radius:100px;padding:2px 8px;vertical-align:1px;
+  .modal-close:hover{background:#fff;color:var(--cherenkov)}
+
+  /* --- card header with gradient band --- */
+  .card-head{
+    position:relative;text-align:center;padding:72px 26px 24px;
+    background:linear-gradient(165deg,rgba(34,211,238,.17),rgba(106,99,232,.10) 55%,transparent);
+    border-bottom:1px solid var(--line);
   }
-  body.lang-ko .c-action .hint{text-transform:none;font-size:11px;letter-spacing:0}
+  .card-avatar{
+    width:94px;height:94px;border-radius:50%;margin:0 auto 16px;overflow:hidden;
+    border:3px solid var(--ink);
+    box-shadow:0 8px 26px rgba(12,22,38,.18), 0 0 0 1px var(--line-strong);
+  }
+  .card-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .card-avatar.no-img::after,.portrait.no-img::after{
+    content:"TY";display:flex;align-items:center;justify-content:center;
+    width:100%;height:100%;font-family:'Fraunces',serif;font-size:30px;
+    color:var(--cherenkov);background:var(--ink-3);
+  }
+  .portrait.no-img::after{font-size:34px}
+  .modal-name{
+    font-family:'Fraunces',serif;font-size:26px;line-height:1.15;margin-bottom:5px;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+  }
+  body.lang-ko .modal-name{font-family:'Noto Sans KR',serif;font-weight:700}
+  .modal-name .suffix{
+    font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;
+    color:var(--cherenkov);font-weight:400;
+  }
+  .modal-sub{font-size:12.5px;color:var(--muted);line-height:1.6}
+
+  /* --- quick action row --- */
+  .quick-actions{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+    padding:20px 20px 4px;
+  }
+  .qa{
+    display:flex;flex-direction:column;align-items:center;gap:7px;
+    padding:13px 4px;border-radius:14px;
+    border:1px solid var(--line);background:var(--ink-2);
+    transition:.2s;
+  }
+  .qa:hover{border-color:var(--cherenkov);background:rgba(34,211,238,.07);transform:translateY(-2px)}
+  .qa:active{transform:scale(.96)}
+  .qa-ico{font-size:19px;line-height:1}
+  .qa-tx{font-size:10.5px;color:var(--muted);letter-spacing:.01em}
+
+  .contact-list{list-style:none;padding:12px 26px 0}
+  .contact-list li{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+  .contact-list li:first-child{border-top:none}
+  .c-label{font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2)}
+  body.lang-ko .c-label{font-family:'Noto Sans KR',monospace;text-transform:none;font-size:12px}
+  .contact-list a, .contact-list .c-val{font-size:14.5px;color:var(--paper)}
+  .contact-list a:hover{color:var(--cherenkov)}
+
   .toast{
     position:fixed;left:50%;bottom:34px;transform:translate(-50%,8px);
     background:var(--paper);color:#fff;font-size:13px;padding:11px 18px;border-radius:10px;
-    max-width:86vw;text-align:center;
+    max-width:86vw;text-align:center;line-height:1.5;
     opacity:0;pointer-events:none;transition:.22s;z-index:300;
     box-shadow:0 10px 30px rgba(12,22,38,.3);
   }
   .toast.show{opacity:1;transform:translate(-50%,0)}
+
   .save-contact{
-    display:block;width:100%;margin-top:24px;padding:15px;
-    border:none;border-radius:12px;cursor:pointer;
+    display:block;margin:22px 26px 0;padding:16px;text-align:center;
+    border:none;border-radius:14px;cursor:pointer;
     background:var(--cherenkov);color:#fff;
     font-family:inherit;font-size:15px;font-weight:600;letter-spacing:.01em;
-    box-shadow:0 6px 18px rgba(11,127,156,.28);transition:.2s;
+    box-shadow:0 8px 22px rgba(11,127,156,.3);transition:.2s;
   }
-  .save-contact:hover{background:#0a6d86;box-shadow:0 8px 24px rgba(11,127,156,.36)}
+  .save-contact:hover{background:#0a6d86;box-shadow:0 10px 28px rgba(11,127,156,.38)}
   .save-contact:active{transform:scale(.98)}
-  .save-contact.done{background:#1a9e6a;box-shadow:none}
+  .save-hint{
+    margin:12px 26px 0;font-size:11.5px;line-height:1.6;color:var(--muted-2);
+    text-align:center;background:var(--ink-2);border-radius:10px;padding:11px 13px;
+  }
   /* ---------- collapsible sections ---------- */
   .collapsed > .collapsible-item{display:none}
   .more-btn{
@@ -346,8 +413,8 @@
   .more-btn.open .arrow{transform:rotate(180deg)}
 
   .modal-site-link{
-    display:block;margin-top:22px;text-align:center;font-size:13px;color:var(--cherenkov);
-    border-top:1px solid var(--line);padding-top:18px;
+    display:block;margin:20px 26px 0;text-align:center;font-size:13px;color:var(--cherenkov);
+    border-top:1px solid var(--line);padding-top:17px;
   }
 
   @media(prefers-reduced-motion:reduce){
@@ -393,6 +460,7 @@
 </div>
 
 <header class="hero">
+  <div class="hero-bg"></div>
   <div class="glow"></div>
   <div class="beam"></div>
   <div class="wrap hero-inner">
@@ -400,7 +468,7 @@
     <div class="title-row">
       <h1><span data-ko="유도솔">Tosol&nbsp;Yu</span><span class="degree">, M.D., Ph.D.</span><span class="kr-name" data-ko="Tosol Yu">유도솔</span></h1>
       <div class="portrait">
-        <img src="https://www.dirams.re.kr/file/imageView.do?sfn=doctor%2fdetail%2f%2f20260127112600215_01.png&ofn=01.png" alt="Tosol Yu" />
+        <img src="profile.jpg" alt="Tosol Yu" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://www.dirams.re.kr/file/imageView.do?sfn=doctor%2fdetail%2f%2f20260127112600215_01.png&amp;ofn=01.png';this.onerror=function(){this.style.display='none';this.parentNode.classList.add('no-img');};" />
       </div>
     </div>
     <div class="roles">
@@ -418,7 +486,7 @@
       <div class="affil-item"><span class="when">2012–16</span><span class="what" data-ko="방사선종양학과 전공의 · 서울대학교병원">Residency, Radiation Oncology · Seoul National University Hospital <span class="kr">(서울대학교병원)</span></span></div>
     </div>
   </div>
-  <div class="scroll-cue" data-ko="아래로">SCROLL<div class="line"></div></div>
+  <div class="scroll-cue"><span data-ko="아래로">SCROLL</span><div class="line"></div></div>
 </header>
 
 <section id="work">
@@ -426,6 +494,10 @@
     <div class="reveal">
       <div class="eyebrow" data-ko="우리가 하는 일">What we actually do</div>
     </div>
+    <figure class="work-photo reveal">
+      <img src="treatment.jpg" alt="CyberKnife radiosurgery suite at DIRAMS" loading="lazy" />
+      <figcaption data-ko="사이버나이프 정위방사선수술실 · 동남권원자력의학원">CyberKnife radiosurgery suite <span class="kr">(동남권원자력의학원)</span></figcaption>
+    </figure>
     <div class="work-grid reveal">
       <div class="work-cell">
         <div class="num">01</div>
@@ -670,17 +742,40 @@
 <div id="contactModal" class="modal-overlay">
   <div class="modal-card">
     <button type="button" class="modal-close" aria-label="Close">✕</button>
-    <div class="modal-eyebrow" data-ko="연락처">Get in touch</div>
-    <div class="modal-name"><span data-ko="유도솔">Tosol&nbsp;Yu</span> <span class="kr" data-ko="Tosol Yu, M.D., Ph.D.">유도솔</span></div>
-    <div class="modal-sub" data-ko="방사선종양학과 전문의 · 의사과학자<br>동남권원자력의학원 (DIRAMS) · 부산">Radiation Oncologist &amp; Clinician-Scientist<br>DIRAMS <span class="kr">(동남권원자력의학원)</span> · Busan, Korea</div>
+
+    <div class="card-head">
+      <div class="card-avatar">
+        <img src="profile.jpg" alt="Tosol Yu" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='https://www.dirams.re.kr/file/imageView.do?sfn=doctor%2fdetail%2f%2f20260127112600215_01.png&amp;ofn=01.png';this.onerror=function(){this.style.display='none';this.parentNode.classList.add('no-img');};" />
+      </div>
+      <div class="modal-name"><span data-ko="유도솔">Tosol&nbsp;Yu</span><span class="suffix" data-ko="M.D., Ph.D.">M.D., Ph.D.</span></div>
+      <div class="modal-sub" data-ko="방사선종양학과 전문의 · 의사과학자<br>동남권원자력의학원 (DIRAMS) · 부산">Radiation Oncologist &amp; Clinician-Scientist<br>DIRAMS <span class="kr">(동남권원자력의학원)</span> · Busan, Korea</div>
+    </div>
+
+    <div class="quick-actions">
+      <a href="tel:+82517205052" class="qa">
+        <span class="qa-ico">📞</span><span class="qa-tx" data-ko="전화">Call</span>
+      </a>
+      <a href="mailto:tosolyu@dirams.re.kr" class="qa">
+        <span class="qa-ico">✉️</span><span class="qa-tx" data-ko="이메일">Email</span>
+      </a>
+      <a href="#" id="kakaoLink" class="qa">
+        <span class="qa-ico">💬</span><span class="qa-tx">Kakao</span>
+      </a>
+      <a href="https://instagram.com/tosolyu" id="instaLink" class="qa" target="_blank" rel="noopener">
+        <span class="qa-ico">📷</span><span class="qa-tx">Instagram</span>
+      </a>
+    </div>
+
     <ul class="contact-list">
       <li><span class="c-label" data-ko="이메일">Email</span><a href="mailto:tosolyu@dirams.re.kr">tosolyu@dirams.re.kr</a></li>
       <li><span class="c-label" data-ko="전화">Tel</span><a href="tel:+82517205052">051-720-5052</a></li>
-      <li><span class="c-label">KakaoTalk</span><a href="#" id="kakaoLink" class="c-action">tosolyu <span class="hint" data-ko="복사 후 열기">copy &amp; open</span></a></li>
-      <li><span class="c-label">Instagram</span><a href="https://instagram.com/tosolyu" id="instaLink" target="_blank" rel="noopener">@tosolyu</a></li>
+      <li><span class="c-label">KakaoTalk</span><span class="c-val">tosolyu</span></li>
+      <li><span class="c-label">Instagram</span><span class="c-val">@tosolyu</span></li>
     </ul>
+
     <div id="toast" class="toast"></div>
-    <a href="contact-en.vcf" id="saveContactBtn" class="save-contact" data-ko="📇 연락처에 저장">📇 Save to contacts</a>
+    <a href="contact-en.vcf" id="saveContactBtn" class="save-contact" data-ko="연락처에 저장">Save to contacts</a>
+    <p class="save-hint" id="saveHint" hidden></p>
     <a href="#work" class="modal-site-link" data-ko="연구 소개 보기 ↓">Explore the research ↓</a>
   </div>
 </div>
@@ -800,17 +895,40 @@
   // NOTE: on iOS/Android the `download` attribute makes the OS file-save the .vcf
   // instead of handing it to Contacts, so we only set it on desktop.
   var saveBtn = document.getElementById('saveContactBtn');
-  var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  var saveHint = document.getElementById('saveHint');
+  var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  var isAndroid = /Android/i.test(navigator.userAgent);
   function syncVCardLink(lang){
     if(!saveBtn) return;
     saveBtn.setAttribute('href', lang === 'ko' ? 'contact-ko.vcf' : 'contact-en.vcf');
-    if(isMobile){
+    if(isIOS || isAndroid){
       saveBtn.removeAttribute('download');
       saveBtn.removeAttribute('target');
     } else {
       saveBtn.setAttribute('download', (lang === 'ko' ? '유도솔' : 'TosolYu') + '.vcf');
     }
   }
+
+  // Android downloads the .vcf first and only hands it to Contacts when the
+  // user opens it, so spell that out instead of leaving them on a silent tap.
+  saveBtn.addEventListener('click', function(){
+    if(!saveHint) return;
+    var ko = document.body.classList.contains('lang-ko');
+    var msg = '';
+    if(isAndroid){
+      msg = ko
+        ? '파일이 다운로드됩니다. 화면 상단 알림 또는 크롬 다운로드 목록에서 파일을 눌러 연락처에 추가하세요.'
+        : 'The file downloads first — tap it in your notification bar or Chrome downloads to add it to Contacts.';
+    } else if(isIOS){
+      msg = ko
+        ? '연락처 미리보기가 열리면 "새로운 연락처 생성"을 눌러 저장하세요.'
+        : 'When the contact preview opens, tap "Create New Contact" to save.';
+    }
+    if(msg){
+      saveHint.textContent = msg;
+      saveHint.hidden = false;
+    }
+  });
 
   // ---- collapsible show-more ----
   function syncMoreBtns(lang){
